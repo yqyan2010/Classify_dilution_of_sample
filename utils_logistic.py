@@ -2,33 +2,33 @@
 import numpy as np
 # from sklearn.model_selection import train_test_split
 #
-# def loaddata():
-#     missing_values = ['n/a', 'na', 'Na', 'N/a', '-', '--']
-#     path=r"data/18E20a00.csv"
-#     df=pd.read_csv(path,na_values=missing_values)
-#     X=df.drop(["Not_filtered"], axis=1).values
-#     y=df["Not_filtered"].values
-#     X_train,X_test,y_train,y_test=train_test_split(X, y, test_size=0.1, random_state=29)
-#     X_train=X_train.T
-#     X_test=X_test.T
-#     y_train=y_train.reshape(1,len(y_train))
-#     y_test=y_test.reshape(1,len(y_test))
-#     return X_train,X_test,y_train,y_test
+def loaddata():
+    missing_values = ['n/a', 'na', 'Na', 'N/a', '-', '--']
+    path=r"data/18E20a00.csv"
+    df=pd.read_csv(path,na_values=missing_values)
+    X=df.drop(["Not_filtered"], axis=1).values
+    y=df["Not_filtered"].values
+    X_train,X_test,y_train,y_test=train_test_split(X, y, test_size=0.1, random_state=29)
+    X_train=X_train.T
+    X_test=X_test.T
+    y_train=y_train.reshape(1,len(y_train))
+    y_test=y_test.reshape(1,len(y_test))
+    return X_train,X_test,y_train,y_test
 #
-# def feature_scaling(a):
-#     #--substract mean and divide std----------
-#     #--scaling along each row
-#     a_mean=np.mean(a,axis=1,keepdims=True)
-#     a_std=np.std(a,axis=1,keepdims=True)
-#     a_scaled=(a-a_mean)/a_std
-#     return a_scaled
-#
-# def sigmoid(x):
-#     return 1/(1+(np.exp(-x)))
-#
-# def sigmoid_gradient(x):
-#     s=sigmoid(x)
-#     return s*(1-s)
+def feature_scaling(a):
+    #--substract mean and divide std----------
+    #--scaling along each row
+    a_mean=np.mean(a,axis=1,keepdims=True)
+    a_std=np.std(a,axis=1,keepdims=True)
+    a_scaled=(a-a_mean)/a_std
+    return a_scaled
+
+def sigmoid(x):
+    return 1/(1+(np.exp(-x)))
+
+def sigmoid_gradient(x):
+    s=sigmoid(x)
+    return s*(1-s)
 #
 # """L1 loss"""
 # def L1_loss(y_pred,y_act):
@@ -77,37 +77,37 @@ import numpy as np
 #     predict=(prob>=threshold).astype(int)
 #     return predict
 #
-# """Accuracy of model"""
-# def accuracy(y_pred,y_act):
-#     count=0
-#     #--Number of samples---
-#     m=y_act.shape[1]
-#     for i in range(m):
-#         if y_pred[0,i]==y_act[0,i]:
-#             count+=1
-#     return count/m
+"""Accuracy of model"""
+def accuracy(y_pred,y_act):
+    count=0
+    #--Number of samples---
+    m=y_act.shape[1]
+    for i in range(m):
+        if y_pred[0,i]==y_act[0,i]:
+            count+=1
+    return count/m
+
+"""Confusion matrxi to evaluate the model"""
+def confusionmatrix(y_pred,y_act):
+    (tp,fp,tn,fn)=(0,0,0,0)
+    #--Number of testing sample--
+    m=y_act.shape[1]
+    for i in range(m):
+        if y_act[0,i]==0:#--actual N--
+            if y_pred[0,i]==0:
+                tn+=1
+            else:
+                fp+=1
+        elif y_act[0,i]==1:#--actual P--
+            if y_pred[0,i]==0:
+                fn+=1
+            else:
+                tp+=1
+    return (tp,fp,tn,fn)
+
+# a=np.arange(9).reshape(3,3)
+# print(a)
+# b=np.arange(3).reshape(1,3)
+# print(b)
 #
-# """Confusion matrxi to evaluate the model"""
-# def confusionmatrix(y_pred,y_act):
-#     (tp,fp,tn,fn)=(0,0,0,0)
-#     #--Number of testing sample--
-#     m=y_act.shape[1]
-#     for i in range(m):
-#         if y_act[0,i]==0:#--actual N--
-#             if y_pred[0,i]==0:
-#                 tn+=1
-#             else:
-#                 fp+=1
-#         elif y_act[0,i]==1:#--actual P--
-#             if y_pred[0,i]==0:
-#                 fn+=1
-#             else:
-#                 tp+=1
-#     return (tp,fp,tn,fn)
-
-a=np.arange(9).reshape(3,3)
-print(a)
-b=np.arange(3).reshape(1,3)
-print(b)
-
-print(np.multiply(a,b))
+# print(np.multiply(a,b))
