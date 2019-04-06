@@ -10,8 +10,8 @@ def tanh_gradient(x):
     return 1-t**2
 
 """Logistic binary loss function"""
-def loss_logistic_binary(y_pred,y_act):
-    return -(y_act*np.log(y_pred)+(1-y_act)*np.log((1-y_pred)))
+def loss_logistic_binary(a_L,y_act):
+    return -(y_act*np.log(a_L)+(1-y_act)*np.log((1-a_L)))
 
 """Initialize parameters W1,b1,W2,b2"""
 def initialize(nx,n1,m):
@@ -34,10 +34,10 @@ def forward(X,param,activate="tanh"):
     return (A1,A2)
 
 """Calculate cost"""
-def calculatecost(y_pred,y_act):
+def calculatecost(a_L,y_act):
     m=y_act.shape[1]
     #---Cost of binary logistic classification at the output layer
-    loss=loss_logistic_binary(y_pred,y_act)
+    loss=loss_logistic_binary(a_L,y_act)
     cost=(1/m)*np.sum(loss)
     return cost
 

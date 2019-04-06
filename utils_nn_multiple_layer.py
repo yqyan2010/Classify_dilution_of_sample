@@ -1,5 +1,6 @@
 import numpy as np
 from utils_logistic import loaddata,feature_scaling,sigmoid,accuracy,confusionmatrix
+from utils_nn_one_layer import calculatecost
 
 def ReLU(x):
     return np.maximum(x,np.zeros(shape=x.shape))
@@ -12,6 +13,7 @@ class nn_multiple_layer():
         self.structure=structure
         self.W_params=[]
         self.b_params=[]
+        self.cost=[]
         self.describe="This is neural network model of multiple hidden layers."
 
     def initialize(self,X):
@@ -80,6 +82,10 @@ class nn_multiple_layer():
             a_L=sigmoid(Z_L)
             #======================================
             #======================================
+            #--Calculate cost---------------------
+            self.cost.append(calculatecost(a_L,y))
+            #======================================
+            #======================================
             #--Back propogation-------------------
             #======================================
             #----From loss to layer L--------------
@@ -102,8 +108,8 @@ class nn_multiple_layer():
             #=========================================
             #=========================================
 
-            #--Return optimized W and b
-            return W,b
+        #--Return optimized W and b
+        return W,b,self.cost
 
     def predict(self,X,optW,optb,threshold=0.5):
         # ---Number of layers---------
