@@ -1,10 +1,14 @@
-# Classify_dilution_of_sample
-It classifies testing samples as being diluted or not being diluted
+# Dilution prediction
 
-## Background
-Diluted sample has fake large test values. For example, assume real mercury (Hg) level is 0.001 ppm, however, if the sample is diluted 1000 times, the Hg level will be calculated as 1 ppm, such high level is fake. In practice, our lab relies on people to manually filter out diluted sample, therefore, preventing fake values being submitted as test results.
+## Highlights this repository
+* I write algorithm in this repository, rather than using built-in library from scikit-learn or keras.
+* As of now, it contains logistic and neural network models.
+* Development is in process.
 
 ## Goal
-The classification model uses machine learning to identify report as two categories: the report that comes from a dilute sample versus the report that comes from a non-diluted sample. By using this, the algorithm will send alert message if a diluted sample report is selected to report fake large values. 
+The data set contains ~1000 numericla testing data.Some data (~30%) correspond to samples that are diluted. The goal is to train a binary classification model to predict whether or not if a sample is diluted.
+
+## Background
+Diluted sample has fake large test values. For example, assume real mercury (Hg) level is 0.001 ppm, however, if the sample is diluted 1000 times, the Hg level will be calculated as 1 ppm, such high level is not true. In practice, our lab relies on people to manually filter out diluted results.The goal is to implement machine learning model to run filter before submitting results.
 
 ## Models in use
