@@ -1,20 +1,7 @@
-# import pandas as pd
+import pandas as pd
 import numpy as np
-# from sklearn.model_selection import train_test_split
-#
-def loaddata():
-    missing_values = ['n/a', 'na', 'Na', 'N/a', '-', '--']
-    path=r"data/18E20a00.csv"
-    df=pd.read_csv(path,na_values=missing_values)
-    X=df.drop(["Not_filtered"], axis=1).values
-    y=df["Not_filtered"].values
-    X_train,X_test,y_train,y_test=train_test_split(X, y, test_size=0.1, random_state=29)
-    X_train=X_train.T
-    X_test=X_test.T
-    y_train=y_train.reshape(1,len(y_train))
-    y_test=y_test.reshape(1,len(y_test))
-    return X_train,X_test,y_train,y_test
-#
+from sklearn.model_selection import train_test_split
+
 def feature_scaling(a):
     #--substract mean and divide std----------
     #--scaling along each row
@@ -22,6 +9,35 @@ def feature_scaling(a):
     a_std=np.std(a,axis=1,keepdims=True)
     a_scaled=(a-a_mean)/a_std
     return a_scaled
+
+
+def loaddata():
+    missing_values = ['n/a', 'na', 'Na', 'N/a', '-', '--']
+    path=r"data/18E20a00.csv"
+    #---------------------------------
+    #---Load data and get X,y---------
+    df=pd.read_csv(path,na_values=missing_values)
+    X=df.drop(["Not_filtered"], axis=1).values
+    y=df["Not_filtered"].values
+    #---------------------------------
+    #---feature scale-----------------
+    X=feature_scaling(X)
+    #---------------------------------
+    #---Split to test-----------------
+    X,X_test,y,y_test=train_test_split(X, y, test_size=0.08, random_state=29)
+    #---------------------------------
+    #---Split to train and dev--------
+    X_train,X_dev,y_train,y_dev=train_test_split(X,y, test_size=0.1, random_state=29)
+    #---------------------------------
+
+    X_train=X_train.T
+    X_dev=X_dev.T
+    X_test=X_test.T
+    y_train=y_train.reshape(1,len(y_train))
+    y_dev=y_dev.reshape(1,len(y_dev))
+    y_test=y_test.reshape(1,len(y_test))
+    return X_train,X_dev,X_test,y_train,y_dev,y_test
+
 
 def sigmoid(x):
     return 1/(1+(np.exp(-x)))
@@ -38,44 +54,44 @@ def sigmoid_gradient(x):
 # def L2_loss(y_pred,y_act):
 #     return (y_pred-y_act)**2
 #
-# def initialize(size):
-#     return np.random.random((1,size))
+def initialize(size):
+    return np.random.random((1,size))
 #
-# def propogate(X,y,W):
-#     m=X.shape[1]
-#     Z=np.dot(W,X)
-#     A=sigmoid(Z)
-#     cost=np.sum(L2_loss(A,y))/m
-#     dW=(np.dot(A-y,X.T))/m
-#     return dW,cost
-#
-# def updateW(W,dW,alpha):
-#     new_W=W-alpha*dW
-#     return new_W
-#
-# def optimize(X,y,alpha=0.01,iter=100):
-#     """Initialize W"""
-#     n_feature=X.shape[0]
-#     W=initialize(n_feature)
-#
-#     """Create a list to save cost"""
-#     costlist=[]
-#
-#     """Iteration to optimize"""
-#     for i in range(iter):
-#         """Calculate dW and cost"""
-#         dW,cost=propogate(X,y,W)
-#         costlist.append(cost)
-#         """Update W"""
-#         W=updateW(W,dW,alpha)
-#
-#     return W,costlist
-#
-# def predict(X,param,threshold=0.5):
-#     #--params is optimized W---
-#     prob=sigmoid(np.dot(param,X))
-#     predict=(prob>=threshold).astype(int)
-#     return predict
+def propogate(X,y,W):
+    m=X.shape[1]
+    Z=np.dot(W,X)
+    A=sigmoid(Z)
+    cost=np.sum(L2_loss(A,y))/m
+    dW=(np.dot(A-y,X.T))/m
+    return dW,cost
+
+def updateW(W,dW,alpha):
+    new_W=W-alpha*dW
+    return new_W
+
+def optimize(X,y,alpha=0.01,iter=100):
+    """Initialize W"""
+    n_feature=X.shape[0]
+    W=initialize(n_feature)
+
+    """Create a list to save cost"""
+    costlist=[]
+
+    """Iteration to optimize"""
+    for i in range(iter):
+        """Calculate dW and cost"""
+        dW,cost=propogate(X,y,W)
+        costlist.append(cost)
+        """Update W"""
+        W=updateW(W,dW,alpha)
+
+    return W,costlist
+
+def predict(X,param,threshold=0.5):
+    #--params is optimized W---
+    prob=sigmoid(np.dot(param,X))
+    predict=(prob>=threshold).astype(int)
+    return predict
 #
 """Accuracy of model"""
 def accuracy(y_pred,y_act):
